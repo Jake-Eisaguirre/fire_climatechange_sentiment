@@ -1,0 +1,20 @@
+---
+title: "Clarissa Data Scratch"
+author: "Clarissa Boyajian"
+date: "5/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(janitor)
+library(here)
+```
+
+
+```{r}
+
+```
+
