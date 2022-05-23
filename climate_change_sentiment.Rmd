@@ -1,0 +1,13 @@
+---
+title: "Climate Change Sentiment During and Not During Wildfires"
+author: "Clarissa Boyajian, Jake Eisaguirre, Daniel Kerstan and Ryan Munnikhuis"
+date: "5/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
