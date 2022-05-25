@@ -9,5 +9,170 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
+library(lubridate)
+library(here)
+library(tidytext)
+library(sentimentr)
+library(quanteda)
+library(quanteda.sentiment)
+library(quanteda.textstats)
+
+bing_sent <- get_sentiments('bing')
+nrc_sent <- get_sentiments('nrc')
+```
+
+
+## Read in cleaned data
+
+```{r}
+practice_data <- read_csv(here("data/cb_fire_tweets.csv")) %>% 
+  select(created_at, text, hashtags, retweet_count, user_name) %>% 
+  separate(col = created_at, into = c("dayofweek", "month", "day", "time1", "time2", "year"), sep = " ") %>% 
+  unite(col = "date", c(month, day, year), sep = " ") %>%
+  mutate(date = mdy(date)) %>%
+  filter(lubridate::year(date) == 2018)
+
+ranch_fire_start <- as.Date("2018-07-27")
+ranch_fire_end <- as.Date("2018-08-27")
+carr_fire_start <- as.Date("2018-07-23")
+carr_fire_end <- as.Date("2018-08-23")
+camp_fire_start <- as.Date("2018-11-07")
+camp_fire_end <- as.Date("2018-12-07")
+woolsey_fire_start <- as.Date("2018-11-08")
+woolsey_fire_end <- as.Date("2018-12-08")
+
+data <- practice_data %>%
+  mutate("fire_specific" = case_when(date >= ranch_fire_start & date <= ranch_fire_end ~ "july",
+                            date >= carr_fire_start & date <= carr_fire_end ~ "july",
+                            date >= camp_fire_start & date <= camp_fire_end ~ "nov",
+                            date >= woolsey_fire_start & date <= woolsey_fire_end ~ "nov"
+  ))
+
+dates <- as.data.frame(unique(data$date))
+
+data <- data %>% 
+  mutate("fire" = case_when(!is.na(fire_specific) ~ "yes",
+                            is.na(fire_specific) ~ "no")) %>% 
+  select(-c(dayofweek, time1, time2))
+
+counts <- data %>% 
+  group_by(fire) %>% 
+  summarize("count" = n())
+```
+
+## Sentiment Analysis
+
+```{r}
+# split into fire and no fire dateframes
+data_fire <- data %>% 
+  filter(fire == "yes") 
+
+data_fire <- data_fire %>% 
+  mutate(id = 1:nrow(data_fire))
+
+data_no_fire <- data %>% 
+  filter(fire == "no")
+
+data_no_fire <- data_no_fire %>% 
+  mutate(id = 0)
+```
+
+
+```{r}
+# split tweets into words and calculated sentiment scores
+words_fire <- data_fire %>% 
+  unnest_tokens(output = word, 
+                input = text, 
+                token = "words") %>%
+  anti_join(stop_words, 
+            by = "word") %>%
+  left_join(bing_sent, 
+            by = "word") %>%
+  left_join(
+    tribble(
+      ~sentiment, ~sent_score,
+      "positive", 1,
+      "negative", -1),
+    by = "sentiment")
+
+words_no_fire <- data_no_fire %>% 
+  unnest_tokens(output = word, 
+                input = text, 
+                token = "words") %>%
+  anti_join(stop_words, 
+            by = "word") %>%
+  left_join(bing_sent, 
+            by = "word") %>%
+  left_join(
+    tribble(
+      ~sentiment, ~sent_score,
+      "positive", 1,
+      "negative", -1),
+    by = "sentiment")
+
+tweets_fire_sentiment <- data_fire %>%
+  left_join(words_fire %>%
+              group_by(id) %>%
+              summarize(sent_score = mean(sent_score, 
+                                          na.rm = T)),
+            by = "id") %>% 
+  mutate(case_when(is.na(sent_score) ~ 0,
+                   !is.na(sent_score) ~ sent_score))
+
+tweets_no_fire_sentiment <- data_no_fire %>%
+  left_join(words_no_fire %>%
+              group_by(id) %>%
+              summarize(sent_score = mean(sent_score, 
+                                          na.rm = T)),
+            by = "id") %>% 
+  mutate(case_when(is.na(sent_score) ~ 0,
+                   !is.na(sent_score) ~ sent_score))
+```
+
+
+```{r}
+# create sentiment plot for fire
+neutral <- length(which(tweets_fire_sentiment$sent_score == 0))
+positive <- length(which(tweets_fire_sentiment$sent_score > 0))
+negative <- length(which(tweets_fire_sentiment$sent_score < 0))
+
+Sentiment <- c("Positive", "Neutral", "Negative")
+Count <- c(positive, neutral, negative)
+output <- data.frame(Sentiment,Count)
+output$Sentiment <- factor(output$Sentiment, 
+                           levels = Sentiment)
+
+ggplot(output, 
+       aes(x = Sentiment, y = Count)) +
+  geom_bar(stat = "identity", 
+           aes(fill = Sentiment)) +
+  scale_fill_manual("legend", 
+                    values = c("Positive" = "green", 
+                               "Neutral" = "black", 
+                               "Negative" = "red")) +
+  labs(title = "Barplot of Sentiment in Climeate Change Tweets During Wildfires in California")
+```
+
+```{r}
+# create sentiment plot for fire
+neutral <- length(which(tweets_no_fire_sentiment$sent_score == 0))
+positive <- length(which(tweets_no_fire_sentiment$sent_score > 0))
+negative <- length(which(tweets_no_fire_sentiment$sent_score < 0))
+
+Sentiment <- c("Positive", "Neutral", "Negative")
+Count <- c(positive, neutral, negative)
+output <- data.frame(Sentiment,Count)
+output$Sentiment <- factor(output$Sentiment, 
+                           levels = Sentiment)
+
+ggplot(output, 
+       aes(x = Sentiment, y = Count)) +
+  geom_bar(stat = "identity", 
+           aes(fill = Sentiment)) +
+  scale_fill_manual("legend", 
+                    values = c("Positive" = "green", 
+                               "Neutral" = "black", 
+                               "Negative" = "red")) +
+  labs(title = "Barplot of Sentiment in Climeate Change Tweets Not During Wildfires in California")
 ```
 
