@@ -74,7 +74,7 @@ data_no_fire <- data %>%
   filter(fire == "no")
 
 data_no_fire <- data_no_fire %>% 
-  mutate(id = 0)
+  mutate(id = 0) # change `0` to `1:nrow(data_fire)` once we have fire data
 ```
 
 
