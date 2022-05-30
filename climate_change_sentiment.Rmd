@@ -253,7 +253,10 @@ line_plot_sentiment <- ggplot(data = daily_sentiment,
   labs(x = "Date",
        y = "Average Daily Sentiment Score",
        title = "Daily Tweet Sentiment",
-       subtitle = "Climate Change Tweets")
+       subtitle = "Climate Change Tweets") + 
+  theme(plot.title = element_text(size = 16),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
 
 line_plot_sentiment
 ```
@@ -287,7 +290,10 @@ bar_plot_sentiment <- ggplot(data = daily_sentiment,
   labs(x = "Date",
        y = "Average Daily Sentiment Score",
        title = "Daily Tweet Sentiment",
-       subtitle = "Climate Change Tweets")
+       subtitle = "Climate Change Tweets") + 
+  theme(plot.title = element_text(size = 16),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
 
 bar_plot_sentiment
 ```
@@ -330,7 +336,10 @@ line_plot_tweets <- ggplot(data = all_tweets,
   scale_y_continuous(labels = comma) +
   labs(x = "Date",
        y = "Total Daily Tweets",
-       title = "Number of Daily Climate Change Tweets")
+       title = "Number of Daily Climate Change Tweets") + 
+  theme(plot.title = element_text(size = 16),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
 
 line_plot_tweets
 ```
@@ -364,7 +373,10 @@ bar_plot_tweets <- ggplot(data = all_tweets,
   scale_y_continuous(labels = comma) +
   labs(x = "Date",
        y = "Total Daily Tweets",
-       title = "Number of Daily Climate Change Tweets")
+       title = "Number of Daily Climate Change Tweets") + 
+  theme(plot.title = element_text(size = 16),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
 
 bar_plot_tweets
 ```
