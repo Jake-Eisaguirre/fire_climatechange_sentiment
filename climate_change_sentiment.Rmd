@@ -224,7 +224,10 @@ daily_sentiment <- rbind(tweets_fire_sentiment,
 
 max_sentiment <- max(daily_sentiment$mean_sentiment)
 min_sentiment <- min(daily_sentiment$mean_sentiment)
+```
 
+
+```{r, fig.height=7, fig.width=10}
 # line plot
 line_plot_sentiment <- ggplot(data = daily_sentiment,
                               aes(x = date, 
@@ -261,7 +264,7 @@ line_plot_sentiment <- ggplot(data = daily_sentiment,
 line_plot_sentiment
 ```
 
-```{r}
+```{r, fig.height=7, fig.width=10}
 # bar plot
 bar_plot_sentiment <- ggplot(data = daily_sentiment,
                               aes(x = date, 
@@ -307,7 +310,10 @@ all_tweets <- data_cleaned %>%
   summarise(count = n())
 
 max_count <- max(all_tweets$count)
+```
 
+
+```{r, fig.height=7, fig.width=10}
 # line plot
 line_plot_tweets <- ggplot(data = all_tweets,
                            aes(x = date, 
@@ -320,7 +326,7 @@ line_plot_tweets <- ggplot(data = all_tweets,
             alpha = 0.5) +
   annotate(geom = "text",
            x = as.Date("2018-08-09", "%Y-%m-%d"), 
-           y = max_count * (4/5),
+           y = max_count,
            label = "Ranch and \nCarr Fires") +
   geom_rect(aes(xmin = as.Date("2018-11-07", "%Y-%m-%d"), 
                 xmax = as.Date("2018-12-08", "%Y-%m-%d"), 
@@ -330,7 +336,7 @@ line_plot_tweets <- ggplot(data = all_tweets,
             alpha = 0.5) +
   annotate(geom = "text",
            x = as.Date("2018-11-22", "%Y-%m-%d"),
-           y = max_count * (4/5),
+           y = max_count,
            label = "Camp and \nWoolsey Fires") +
   geom_line() +
   scale_y_continuous(labels = comma) +
@@ -344,7 +350,7 @@ line_plot_tweets <- ggplot(data = all_tweets,
 line_plot_tweets
 ```
 
-```{r}
+```{r, fig.height=7, fig.width=10}
 # bar plot
 bar_plot_tweets <- ggplot(data = all_tweets,
                            aes(x = date, 
@@ -357,7 +363,7 @@ bar_plot_tweets <- ggplot(data = all_tweets,
             alpha = 0.5) +
   annotate(geom = "text",
            x = as.Date("2018-08-09", "%Y-%m-%d"), 
-           y = max_count * (4/5),
+           y = max_count,
            label = "Ranch and \nCarr Fires") +
   geom_rect(aes(xmin = as.Date("2018-11-07", "%Y-%m-%d"), 
                 xmax = as.Date("2018-12-08", "%Y-%m-%d"), 
@@ -367,7 +373,7 @@ bar_plot_tweets <- ggplot(data = all_tweets,
             alpha = 0.5) +
   annotate(geom = "text",
            x = as.Date("2018-11-22", "%Y-%m-%d"),
-           y = max_count * (4/5),
+           y = max_count,
            label = "Camp and \nWoolsey Fires") +
   geom_col(alpha = 0.8) +
   scale_y_continuous(labels = comma) +
