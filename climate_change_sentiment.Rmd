@@ -392,17 +392,21 @@ bar_plot_tweets
 ```{r}
 # save line plots
 ggsave(plot = line_plot_sentiment,
-       filename = here("figs/line_plot_daily_sentiment.png"))
+       filename = here("figs/line_plot_daily_sentiment.png"),
+       width = 12, height = 7)
 
 ggsave(plot = line_plot_tweets,
-       filename = here("figs/line_plot_daily_tweets.png"))
+       filename = here("figs/line_plot_daily_tweets.png"),
+       width = 12, height = 7)
 
 # save bar plots
 ggsave(plot = bar_plot_sentiment,
-       filename = here("figs/bar_plot_daily_sentiment.png"))
+       filename = here("figs/bar_plot_daily_sentiment.png"),
+       width = 12, height = 7)
 
 ggsave(plot = bar_plot_tweets,
-       filename = here("figs/bar_plot_daily_tweets.png"))
+       filename = here("figs/bar_plot_daily_tweets.png"),
+       width = 12, height = 7)
 ```
 
 
