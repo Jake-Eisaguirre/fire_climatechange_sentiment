@@ -154,7 +154,11 @@ bar_plot_fire <- ggplot(output,
   labs(title = "Sentiment in Climate Change Tweets",
        subtitle = "During Wildfires in California",
        y = "Number of Tweets",
-       x = "Sentiment")
+       x = "Sentiment")  + 
+  theme(legend.position = "none",
+        plot.title = element_text(size = 16),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
 
 bar_plot_fire
 ```
@@ -177,7 +181,7 @@ bar_plot_no_fire <- ggplot(output,
            aes(fill = Sentiment)) +
   geom_text(aes(label = comma(Count)), 
             position = position_dodge(width = 0.9), 
-            vjust = -0.25) +
+            vjust = -0.25, size = 4) +
   scale_fill_manual("legend", 
                     values = c("Positive" = "darkgreen", 
                                "Neutral" = "grey", 
@@ -186,7 +190,11 @@ bar_plot_no_fire <- ggplot(output,
   labs(title = "Sentiment in Climate Change Tweets",
        subtitle = "Not During Wildfires in California",
        y = "Number of Tweets",
-       x = "Sentiment")
+       x = "Sentiment") + 
+  theme(legend.position = "none",
+        plot.title = element_text(size = 16),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
 
 bar_plot_no_fire
 ```
